@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.1.0)
 project(bff)
 
-option(BFF_BUILD_CLI  "Build BFF command line" ON)
-option(BFF_BUILD_GUI  "Build BFF GUI"          ON)
+option(BFF_BUILD_CLI  "Build BFF command line" OFF)
+option(BFF_BUILD_GUI  "Build BFF GUI"          OFF)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -26,12 +26,21 @@ endif()
 # directory where SuiteSparse was built.
 # ------------------------------------------------------------------
 set(SuiteSparse_USE_LAPACK_BLAS ON)
-find_package(SuiteSparse QUIET NO_MODULE)  # 1st: Try to locate the *config.cmake file.
-if(NOT SuiteSparse_FOUND)
-	set(SuiteSparse_VERBOSE ON)
-	find_package(SuiteSparse REQUIRED) # 2nd: Use FindSuiteSparse.cmake module
-endif()
+set(SuiteSparse_VERBOSE ON)
+find_package(SuiteSparse REQUIRED) # 2nd: Use FindSuiteSparse.cmake module
 MESSAGE(STATUS "SuiteSparse_LIBS: ${SuiteSparse_LIBRARIES}")
+
+# ------------------------------------------------------------------
+# OpenBLAS (Windows prebuilt)
+# ------------------------------------------------------------------
+set(OPENBLAS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/deps/openblas-windows")
+set(OPENBLAS_INCLUDE_DIR "${OPENBLAS_ROOT}/include")
+set(OPENBLAS_LIB_DIR "${OPENBLAS_ROOT}/lib")
+set(OPENBLAS_BIN_DIR "${OPENBLAS_ROOT}/bin")
+set(OPENBLAS_LIBS
+	"${OPENBLAS_LIB_DIR}/libopenblas.lib"
+	"${OPENBLAS_LIB_DIR}/libopenblas.dll.a"
+)
 
 # bff lib
 list(APPEND BFF_INCLUDE_DIRS ${SuiteSparse_INCLUDE_DIRS})
@@ -39,16 +48,26 @@ list(APPEND BFF_INCLUDE_DIRS "deps/rectangle-bin-pack")
 list(APPEND BFF_INCLUDE_DIRS "include")
 
 file(GLOB BFF_SOURCES "deps/rectangle-bin-pack/GuillotineBinPack.cpp"
-					  "deps/rectangle-bin-pack/SkylineBinPack.cpp"
-					  "deps/rectangle-bin-pack/Rect.cpp"
-					  "src/linear-algebra/*.cpp"
-					  "src/mesh/*.cpp"
-					  "src/project/*.cpp")
+	"deps/rectangle-bin-pack/SkylineBinPack.cpp"
+	"deps/rectangle-bin-pack/Rect.cpp"
+	"src/linear-algebra/*.cpp"
+	"src/mesh/*.cpp"
+	"src/project/*.cpp")
 
 # create bff static library
 add_library(bff ${BFF_SOURCES})
-target_link_libraries(bff ${SuiteSparse_LIBRARIES})
-target_include_directories(bff PUBLIC ${BFF_INCLUDE_DIRS})
+target_include_directories(bff
+	PUBLIC
+	${BFF_INCLUDE_DIRS}
+	${OPENBLAS_INCLUDE_DIR}
+)
+target_link_directories(bff PRIVATE ${OPENBLAS_LIB_DIR})
+
+target_link_libraries(bff
+	${SuiteSparse_LIBRARIES}
+	${OPENBLAS_LIBS}
+)
+
 if (NOT BFF_USD_DIR STREQUAL "")
 	target_link_libraries(bff ${PXR_LIBRARIES})
 	target_include_directories(bff PRIVATE ${PXR_INCLUDE_DIRS})
@@ -86,3 +105,23 @@ if (BFF_BUILD_GUI)
 	target_include_directories(bff-viewer PUBLIC ${BFF_VIEWER_INCLUDE_DIRS})
 	target_link_libraries(bff-viewer bff glm nanogui ${NANOGUI_EXTRA_LIBS})
 endif()
+
+# Install DLLs
+
+# OpenBLAS DLLs
+install(DIRECTORY ${OPENBLAS_BIN_DIR}/
+    DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT bff
+)
+# SuiteSparse DLLs
+install(DIRECTORY ${SuiteSparse_DIR}/build/install/release/bin/
+    DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT bff
+)
+# Lapack/BLAS DLLs 
+foreach(dll ${SuiteSparse_LAPACK_BLAS_DLL})
+		get_filename_component(dll_name ${dll} NAME)
+		install(FILES ${dll}
+				DESTINATION ${CMAKE_INSTALL_BINDIR}
+				COMPONENT bff
+
+		)
+endforeach()
