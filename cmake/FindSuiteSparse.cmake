@@ -154,6 +154,7 @@ macro(SuiteSparse_FIND_COMPONENTS )
 						${SuiteSparse_DIR}/suitesparse/include
 						${SuiteSparse_DIR}/include/${suitesparseComp}
 						${SuiteSparse_DIR}/${suitesparseComp}/include
+						${SuiteSparse_DIR}/build/install/release/include/suitesparse
 						${${suitesparseCompUC}_DIR}/include
 						${${suitesparseCompUC}_DIR}/${suitesparseComp}/include
 						${${suitesparseCompUC}_DIR}
@@ -182,6 +183,7 @@ macro(SuiteSparse_FIND_COMPONENTS )
 						${${suitesparseCompUC}_DIR}/lib${SuiteSparse_SEARCH_LIB_POSTFIX}
 						${${suitesparseCompUC}_DIR}
 						${SuiteSparse_DIR}/${CMAKE_INSTALL_LIBDIR}
+						${SuiteSparse_DIR}/build/install/release/lib
 						${${suitesparseCompUC}_DIR}/${CMAKE_INSTALL_LIBDIR}
 			PATHS 			/opt/local/lib${SuiteSparse_SEARCH_LIB_POSTFIX}
 						/usr/lib${SuiteSparse_SEARCH_LIB_POSTFIX}
@@ -198,6 +200,7 @@ macro(SuiteSparse_FIND_COMPONENTS )
 						${${suitesparseCompUC}_DIR}/lib${SuiteSparse_SEARCH_LIB_POSTFIX}
 						${${suitesparseCompUC}_DIR}
 						${SuiteSparse_DIR}/${CMAKE_INSTALL_LIBDIR}
+						${SuiteSparse_DIR}/build/install/release/lib
 						${${suitesparseCompUC}_DIR}/${CMAKE_INSTALL_LIBDIR}
 
 			PATHS 			/opt/local/lib${SuiteSparse_SEARCH_LIB_POSTFIX}
@@ -316,6 +319,7 @@ if(SuiteSparse_USE_LAPACK_BLAS)
 		${SuiteSparse_DIR}/${CMAKE_INSTALL_LIBDIR}/blas_windows
 		${SuiteSparse_DIR}/${CMAKE_INSTALL_LIBDIR}/lapack_blas_windows
 		${SuiteSparse_DIR}/lapack_blas_windows/${CMAKE_INSTALL_LIBDIR}
+		${SuiteSparse_DIR}/lapack_windows/x64/
 	)
 
 	## try to find blas lib
