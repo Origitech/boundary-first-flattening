@@ -114,7 +114,14 @@ install(DIRECTORY ${OPENBLAS_BIN_DIR}/
 )
 # SuiteSparse DLLs
 install(DIRECTORY ${SuiteSparse_DIR}/build/install/release/bin/
-    DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT bff
+    DESTINATION ${CMAKE_INSTALL_BINDIR} 
+		CONFIGURATIONS Release
+		COMPONENT bff
+)
+install(DIRECTORY ${SuiteSparse_DIR}/build/install/debug/bin/
+    DESTINATION ${CMAKE_INSTALL_BINDIR} 
+		CONFIGURATIONS Debug
+		COMPONENT bff
 )
 # Lapack/BLAS DLLs 
 foreach(dll ${SuiteSparse_LAPACK_BLAS_DLL})
