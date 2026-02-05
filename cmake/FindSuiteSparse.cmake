@@ -155,6 +155,7 @@ macro(SuiteSparse_FIND_COMPONENTS )
 						${SuiteSparse_DIR}/include/${suitesparseComp}
 						${SuiteSparse_DIR}/${suitesparseComp}/include
 						${SuiteSparse_DIR}/build/install/release/include/suitesparse
+						${SuiteSparse_DIR}/build/install/debug/include/suitesparse
 						${${suitesparseCompUC}_DIR}/include
 						${${suitesparseCompUC}_DIR}/${suitesparseComp}/include
 						${${suitesparseCompUC}_DIR}
@@ -200,7 +201,7 @@ macro(SuiteSparse_FIND_COMPONENTS )
 						${${suitesparseCompUC}_DIR}/lib${SuiteSparse_SEARCH_LIB_POSTFIX}
 						${${suitesparseCompUC}_DIR}
 						${SuiteSparse_DIR}/${CMAKE_INSTALL_LIBDIR}
-						${SuiteSparse_DIR}/build/install/release/lib
+						${SuiteSparse_DIR}/build/install/debug/lib
 						${${suitesparseCompUC}_DIR}/${CMAKE_INSTALL_LIBDIR}
 
 			PATHS 			/opt/local/lib${SuiteSparse_SEARCH_LIB_POSTFIX}
