@@ -110,16 +110,16 @@ endif()
 
 # OpenBLAS DLLs
 install(DIRECTORY ${OPENBLAS_BIN_DIR}/
-    DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT bff
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/bin COMPONENT bff
 )
 # SuiteSparse DLLs
 install(DIRECTORY ${SuiteSparse_DIR}/build/install/release/bin/
-    DESTINATION ${CMAKE_INSTALL_BINDIR} 
-		CONFIGURATIONS Release
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/bin 
+		CONFIGURATIONS Release RelWithDebInfo
 		COMPONENT bff
 )
 install(DIRECTORY ${SuiteSparse_DIR}/build/install/debug/bin/
-    DESTINATION ${CMAKE_INSTALL_BINDIR} 
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/bin 
 		CONFIGURATIONS Debug
 		COMPONENT bff
 )
@@ -127,7 +127,7 @@ install(DIRECTORY ${SuiteSparse_DIR}/build/install/debug/bin/
 foreach(dll ${SuiteSparse_LAPACK_BLAS_DLL})
 		get_filename_component(dll_name ${dll} NAME)
 		install(FILES ${dll}
-				DESTINATION ${CMAKE_INSTALL_BINDIR}
+				DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
 				COMPONENT bff
 
 		)
